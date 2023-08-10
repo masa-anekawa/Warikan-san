@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  pkl-inspector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./pickles:/home/user/pickles:ro
+    network_mode: none
