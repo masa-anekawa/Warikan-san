@@ -9,8 +9,10 @@ install = "*"
 pandas = "*"
 scikit-learn = "*"
 joblib = "*"
+xgboost = "*"
 
 [dev-packages]
+jupyter = "*"
 
 [requires]
 python_version = "3.11"
