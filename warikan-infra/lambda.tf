@@ -1,22 +1,14 @@
-data "archive_file" "lambda_zip" {
-  type        = "zip"
-  source_file = "lambda_function.py"
-  output_path = "lambda_function_payload.zip"
-}
-
 resource "aws_lambda_function" "csv_transformer" {
   depends_on = [
     aws_iam_role_policy_attachment.lambda_logs,
     aws_cloudwatch_log_group.lambda_log_group,
   ]
 
-  function_name = "${var.app_name}_csv_transformer"
-  handler       = "lambda_function.lambda_handler"
-  runtime       = "python3.9"
+  function_name = "${var.app_name}-csv-transformer"
   role          = aws_iam_role.lambda_exec.arn
-
-  filename      = data.archive_file.lambda_zip.output_path
-  source_code_hash = filebase64sha256(data.archive_file.lambda_zip.output_path)
+  package_type  = "Image"
+  image_uri = "${aws_ecr_repository.lambda_container_repo.repository_url}:b1c3557ee4322e440677ace1855a9780"
+  timeout       = 60  # 必要に応じてタイムアウトを調整
 
   environment {
     variables = {

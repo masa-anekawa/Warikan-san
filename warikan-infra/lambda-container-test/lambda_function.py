@@ -8,7 +8,7 @@ s3 = boto3.client('s3')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-def lambda_handler(event, context):
+def handler(event, context):
     # イベントからアップロードされたS3のオブジェクト情報を取得
     record = event['Records'][0]
     input_bucket = record['s3']['bucket']['name']
