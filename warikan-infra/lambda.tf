@@ -1,13 +1,13 @@
-resource "aws_lambda_function" "csv_transformer" {
+resource "aws_lambda_function" "csv_formatter" {
   depends_on = [
     aws_iam_role_policy_attachment.lambda_logs,
     aws_cloudwatch_log_group.lambda_log_group,
   ]
 
-  function_name = "${var.app_name}-csv-transformer"
+  function_name = "${var.app_name}-csv-formatter"
   role          = aws_iam_role.lambda_exec.arn
   package_type  = "Image"
-  image_uri = "${aws_ecr_repository.lambda_container_repo.repository_url}:b1c3557ee4322e440677ace1855a9780"
+  image_uri = "${aws_ecr_repository.csv_formatter_repo.repository_url}:cfbfca3a6663af7d0d8363cafb6b7f2a"
   timeout       = 60  # 必要に応じてタイムアウトを調整
 
   environment {
@@ -35,13 +35,8 @@ resource "aws_iam_role" "lambda_exec" {
   })
 }
 
-import {
-  to = aws_cloudwatch_log_group.lambda_log_group
-  id = "/aws/lambda/warikan-san_csv_transformer"
-}
-
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
-  name              = "/aws/lambda/${var.app_name}_csv_transformer"
+  name              = "/aws/lambda/${var.app_name}-csv-formatter"
   retention_in_days = 14
 }
 

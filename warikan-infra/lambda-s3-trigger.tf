@@ -3,7 +3,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   bucket = aws_s3_bucket.input_bucket.bucket
 
   lambda_function {
-    lambda_function_arn = aws_lambda_function.csv_transformer.arn
+    lambda_function_arn = aws_lambda_function.csv_formatter.arn
     events              = ["s3:ObjectCreated:*"]
   }
 }
@@ -18,7 +18,7 @@ resource "null_resource" "wait_for_lambda_trigger" {
 resource "aws_lambda_permission" "allow_bucket" {
   statement_id  = "AllowS3Bucket"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.csv_transformer.function_name
+  function_name = aws_lambda_function.csv_formatter.function_name
   principal     = "s3.amazonaws.com"
   source_arn    = "${aws_s3_bucket.input_bucket.arn}"
 }
@@ -38,10 +38,17 @@ resource "aws_iam_policy" "lambda_s3_access" {
       {
         Action = [
           "s3:GetObject",
-          "s3:PutObject"
         ],
         Resource = [
           "${aws_s3_bucket.input_bucket.arn}/*",
+        ],
+        Effect = "Allow"
+      },
+      {
+        Action = [
+          "s3:PutObject"
+        ],
+        Resource = [
           "${aws_s3_bucket.output_bucket.arn}/*"
         ],
         Effect = "Allow"
