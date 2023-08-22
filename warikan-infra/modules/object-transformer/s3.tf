@@ -1,9 +1,5 @@
 resource "aws_s3_bucket" "input_bucket" {
-  bucket = "${var.app_name}-input-csv-bucket"
-}
-
-resource "aws_s3_bucket" "output_bucket" {
-  bucket = "${var.app_name}-output-csv-bucket"
+  bucket = "${var.project_name}-${var.name}-inputs"
 }
 
 resource "aws_s3_bucket_ownership_controls" "input_bucket_ownership_control" {
@@ -18,6 +14,10 @@ resource "aws_s3_bucket_acl" "input_bucket_acl" {
 
   bucket = aws_s3_bucket.input_bucket.id
   acl    = "private"
+}
+
+resource "aws_s3_bucket" "output_bucket" {
+  bucket = "${var.project_name}-${var.name}-outputs"
 }
 
 resource "aws_s3_bucket_ownership_controls" "output_bucket_ownership_control" {
