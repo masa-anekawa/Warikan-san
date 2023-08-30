@@ -27,7 +27,8 @@ def process_stream_for_inference(input_stream: WarikanStream, output_stream: War
     encoder_save_path = kwargs.get('encoder_save_path', 'models/label_encoders.pkl')
     label_encoder = load(encoder_save_path)
     # Load data
-    data = pd.read_csv(input_stream, encoding='SHIFT_JIS')
+    encoding = kwargs.get('encoding', 'shift-jis')
+    data = pd.read_csv(input_stream, engine='python', encoding=encoding)
     # Preprocess data
     preprocessed_data = preprocess_data_handle_unseen(data, label_encoder)
     # Predict
@@ -35,7 +36,7 @@ def process_stream_for_inference(input_stream: WarikanStream, output_stream: War
     # Add predictions to original data
     data['予測_割り勘対象'] = predictions
     # Return the predicted data
-    data.to_csv(output_stream, index=False, encoding="SHIFT_JIS")
+    data.to_csv(output_stream, index=False, encoding=encoding)
 
 
 def load_model(model_save_path):

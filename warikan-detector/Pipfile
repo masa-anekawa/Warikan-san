@@ -10,6 +10,7 @@ pandas = "*"
 scikit-learn = "*"
 joblib = "*"
 xgboost = "*"
+botocore = "*"
 
 [dev-packages]
 jupyter = "*"
