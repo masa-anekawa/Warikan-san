@@ -1,16 +1,25 @@
 import json
 import boto3
+import logging
 import os
 from io import StringIO
 
 from src.main_inference import process_stream_for_inference
 
+# ロギングの設定
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+
+s3 = boto3.client('s3')
+
+
 # simple as lambda handler that invoke specific function, called by s3 put event
 def lambda_handler(event, context):
-    print(event)
-    print(context)
+    logger.info(f'event: {event}')
+    logger.info(f'context: {context}')
+
     # get s3 object
-    s3 = boto3.client('s3')
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key']
     # get object
@@ -24,8 +33,9 @@ def lambda_handler(event, context):
     # upload to s3 where bucket and key is retrieved from env values
     output_bucket = os.environ.get('OUTPUT_BUCKET', 'warikan-detector-output')
     s3.put_object(Bucket=output_bucket, Key=key, Body=output_stream)
-    return {
+    response = {
         'statusCode': 200,
         'body': json.dumps('Hello from Lambda!')
     }
-
+    logger.info(f'response: {response}')
+    return response
