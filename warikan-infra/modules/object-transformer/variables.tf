@@ -1,3 +1,15 @@
+# region variable
+variable "region" {
+  description = "The AWS region to deploy to."
+  type        = string
+}
+
+# aws account id variable
+variable "account_id" {
+  description = "The AWS account ID to deploy to."
+  type        = string
+}
+
 variable "project_name" {
   description = "The name of the application."
   type        = string

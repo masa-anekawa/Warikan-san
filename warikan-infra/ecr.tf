@@ -1,6 +1,10 @@
 resource "aws_ecr_repository" "lambda_container_repo" {
   name                 = "${var.app_name}-lambda-container"
-  image_tag_mutability = "MUTABLE"
+  image_tag_mutability = "IMMUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "lambda_container_lifecycle" {
@@ -26,7 +30,11 @@ resource "aws_ecr_lifecycle_policy" "lambda_container_lifecycle" {
 
 resource "aws_ecr_repository" "csv_formatter_repo" {
   name                 = "${var.app_name}-csv-formatter"
-  image_tag_mutability = "MUTABLE"
+  image_tag_mutability = "IMMUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "csv_formatter_lifecycle" {

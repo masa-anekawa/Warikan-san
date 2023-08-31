@@ -1,10 +1,12 @@
 provider "aws" {
-  region = "ap-northeast-1"
+  region = var.region
 }
 
 module "csv_formatter" {
   source           = "./modules/object-transformer"
+  region           = var.region
+  account_id       = var.account_id
   project_name     = var.app_name
   name             = "csv-formatter"
-  image_uri        = "299550732592.dkr.ecr.ap-northeast-1.amazonaws.com/warikan-san-csv-formatter:cfbfca3a6663af7d0d8363cafb6b7f2a"
+  image_uri        = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-csv-formatter:cfbfca3a6663af7d0d8363cafb6b7f2a"
 }
