@@ -3,7 +3,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   bucket = var.input_bucket.bucket
 
   lambda_function {
-    lambda_function_arn = aws_lambda_function.csv_formatter.arn
+    lambda_function_arn = aws_lambda_function.lambda_function.arn
     events              = ["s3:ObjectCreated:*"]
   }
 }
@@ -18,7 +18,7 @@ resource "null_resource" "wait_for_lambda_trigger" {
 resource "aws_lambda_permission" "allow_bucket" {
   statement_id  = "AllowS3Bucket"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.csv_formatter.function_name
+  function_name = aws_lambda_function.lambda_function.function_name
   principal     = "s3.amazonaws.com"
   source_arn    = var.input_bucket.arn
 }
@@ -29,7 +29,7 @@ resource "aws_iam_role_policy_attachment" "lambda_s3_access" {
 }
 
 resource "aws_iam_policy" "lambda_s3_access" {
-  name        = "${var.project_name}_LambdaS3Access"
+  name        = "${var.project_name}-${var.name}-LambdaS3Access"
   description = "Allows lambda to read and write from S3"
 
   policy = jsonencode({
