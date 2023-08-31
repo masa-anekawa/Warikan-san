@@ -1,16 +1,31 @@
-FROM python:3.11
+# ---- Build Stage ----
+FROM public.ecr.aws/lambda/python:3.11 as builder
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /var/task
 
-# Copy Pipfile and Pipfile.lock to the container
-COPY Pipfile Pipfile.lock /app/
+# Copy the Pipfile and Pipfile.lock to the container
+COPY Pipfile Pipfile.lock /var/task/
 
-# Install dependencies and the app itself
-RUN pip install pipenv && pipenv install --deploy --ignore-pipfile
+# Install pipenv, generate requirements.txt, and install dependencies
+RUN pip install pipenv && \
+  pipenv install --system --extra-pip-args '--target ./package'
 
-# Copy the content of the local src directory to the working directory
-COPY ./src/ /app/src/
+# ---- Final Stage ----
+FROM public.ecr.aws/lambda/python:3.11
 
-# Specify the command to run on container start
-CMD [ "pipenv", "run", "python", "src/model_process.py" ]
+# Set the working directory
+WORKDIR /var/task
+
+# Copy python dependencies from the builder stage
+COPY --from=builder /var/task/package /var/task/package
+
+# Set PYTHONPATH to the directory containing the dependencies
+ENV PYTHONPATH=/var/task/package
+
+# Copy the lambda handler code and the model files
+COPY ./src /var/task/src
+COPY ./models /var/task/models
+
+# Set the CMD to your handler
+CMD [ "src.lambda_handler.lambda_handler" ]
