@@ -2,7 +2,7 @@ import json
 import boto3
 import logging
 import os
-from io import StringIO
+from io import BytesIO
 
 from src.main_inference import process_stream_for_inference
 
@@ -27,11 +27,11 @@ def lambda_handler(event, context):
     # get body
     input_stream = response['Body']
     # create output stream from string io
-    output_stream = StringIO()
+    output_stream = BytesIO()
     # process
-    process_stream_for_inference(input_stream, output_stream)
+    process_stream_for_inference(input_stream, output_stream, )
     # upload to s3 where bucket and key is retrieved from env values
-    output_bucket = os.environ.get('OUTPUT_BUCKET', 'warikan-detector-output')
+    output_bucket = os.environ.get('OUTPUT_BUCKET', 'warikan-detector-output', model_save_path='models/xgboost_model.pkl')
     s3.put_object(Bucket=output_bucket, Key=key, Body=output_stream)
     response = {
         'statusCode': 200,

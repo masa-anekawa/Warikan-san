@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import pprint
 from joblib import load
 
 from src.preprocessing import preprocess_data_handle_unseen
@@ -16,7 +17,7 @@ def process_folder_for_inference(input_folder_path, output_folder_path, **kwargs
 
 
 def process_csv_file_for_inference(input_file_path, output_file_path, **kwargs) -> None:
-    with open(input_file_path) as input, open(output_file_path, 'w') as output:
+    with open(input_file_path, 'rb') as input, open(output_file_path, 'wb') as output:
         process_stream_for_inference(input, output, **kwargs)
 
 
@@ -27,7 +28,7 @@ def process_stream_for_inference(input_stream: WarikanStream, output_stream: War
     encoder_save_path = kwargs.get('encoder_save_path', 'models/label_encoders.pkl')
     label_encoder = load(encoder_save_path)
     # Load data
-    encoding = kwargs.get('encoding', 'shift-jis')
+    encoding = kwargs.get('encoding', 'cp932')
     data = pd.read_csv(input_stream, engine='python', encoding=encoding)
     # Preprocess data
     preprocessed_data = preprocess_data_handle_unseen(data, label_encoder)
