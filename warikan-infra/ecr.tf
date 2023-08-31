@@ -1,5 +1,5 @@
-resource "aws_ecr_repository" "lambda_container_repo" {
-  name                 = "${var.app_name}-lambda-container"
+resource "aws_ecr_repository" "csv_formatter_repo" {
+  name                 = "${var.app_name}-csv-formatter"
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
@@ -7,8 +7,8 @@ resource "aws_ecr_repository" "lambda_container_repo" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "lambda_container_lifecycle" {
-  repository = aws_ecr_repository.lambda_container_repo.name
+resource "aws_ecr_lifecycle_policy" "csv_formatter_lifecycle" {
+  repository = aws_ecr_repository.csv_formatter_repo.name
 
   policy = jsonencode({
     rules = [
@@ -28,8 +28,8 @@ resource "aws_ecr_lifecycle_policy" "lambda_container_lifecycle" {
   })
 }
 
-resource "aws_ecr_repository" "csv_formatter_repo" {
-  name                 = "${var.app_name}-csv-formatter"
+resource "aws_ecr_repository" "warikan_detector_repo" {
+  name                 = "${var.app_name}-warikan-detector"
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
@@ -37,8 +37,8 @@ resource "aws_ecr_repository" "csv_formatter_repo" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "csv_formatter_lifecycle" {
-  repository = aws_ecr_repository.csv_formatter_repo.name
+resource "aws_ecr_lifecycle_policy" "warikan_detector_lifecycle" {
+  repository = aws_ecr_repository.warikan_detector_repo.name
 
   policy = jsonencode({
     rules = [
