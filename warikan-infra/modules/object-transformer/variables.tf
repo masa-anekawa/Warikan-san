@@ -20,6 +20,16 @@ variable "name" {
   type        = string
 }
 
+# input_bucket map variable that has 'bucket' and 'arn' as key and striings as values
+
+variable "input_bucket" {
+  description = "The S3 bucket where initial objects are placed."
+  type        = object({
+    bucket = string
+    arn    = string
+  })
+}
+
 variable "image_uri" {
   description = "The URI of the container image used by the Lambda function."
   type        = string

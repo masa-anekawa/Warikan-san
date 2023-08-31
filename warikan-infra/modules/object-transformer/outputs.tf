@@ -1,8 +1,3 @@
-output "input_bucket_name" {
-  description = "The name of the S3 bucket where initial objects are placed."
-  value       = aws_s3_bucket.input_bucket.bucket
-}
-
 output "output_bucket_name" {
   description = "The name of the S3 bucket where transformed objects are placed."
   value       = aws_s3_bucket.output_bucket.bucket
