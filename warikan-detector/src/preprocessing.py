@@ -27,7 +27,7 @@ def extract_text_features(data, column_name="内容", n_features=1000):
 
     # Fit and transform the data
     tfidf_features = vectorizer.fit_transform(data[column_name].fillna('')).toarray()
-    print(vectorizer.get_feature_names_out())
+    # print(vectorizer.get_feature_names_out())
     dump(vectorizer, "models/tfidf_vectorizer.pkl")
 
     # Create feature names
@@ -47,7 +47,7 @@ def add_text_features(data, column_name="内容", n_features=1000):
 
     # Fit and transform the data
     tfidf_features = vectorizer.transform(data[column_name].fillna('')).toarray()
-    print(vectorizer.get_feature_names_out())
+    # print(vectorizer.get_feature_names_out())
 
     # Create feature names
     feature_names = [f"{column_name}_tfidf_{i}" for i in range(n_features)]
