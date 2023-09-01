@@ -25,12 +25,13 @@ def lambda_handler(event, context):
     key = event['Records'][0]['s3']['object']['key']
     response = s3.get_object(Bucket=bucket, Key=key)
     input_stream = TextIOWrapper(response['Body'], encoding=encoding)
-    output_stream = TextIOWrapper(BytesIO(), encoding=encoding)
+    output_buffer = BytesIO()
+    output_stream = TextIOWrapper(output_buffer, encoding=encoding)
 
     process_stream_for_inference(input_stream, output_stream, model_save_path='models/xgboost_model.pkl')
 
     output_bucket = os.environ.get('OUTPUT_BUCKET', 'warikan-detector-output')
-    s3.put_object(Bucket=output_bucket, Key=key, Body=output_stream)
+    s3.put_object(Bucket=output_bucket, Key=key, Body=output_buffer.getvalue())
     response = {
         'statusCode': 200,
         'body': f'Successfully processed {key} in {bucket} and saved as {key} in {output_bucket}'

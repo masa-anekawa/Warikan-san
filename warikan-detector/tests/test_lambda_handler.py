@@ -46,7 +46,7 @@ def test_lambda_handler(mock_s3, mock_process_stream_for_inference, mock_text_io
 
     # Assert that S3 client was called with correct arguments
     mock_s3.get_object.assert_called_once_with(Bucket='test-bucket', Key='test-key')
-    mock_s3.put_object.assert_called_once_with(Bucket='warikan-detector-output', Key='test-key', Body=output_stream)
+    mock_s3.put_object.assert_called_once_with(Bucket='warikan-detector-output', Key='test-key', Body=output_buffer.getvalue())
 
     # Assert that the mock bytes io wrapper was called with correct arguments
     mock_bytes_io.assert_called_once_with()
