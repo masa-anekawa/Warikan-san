@@ -20,5 +20,5 @@ module "warikan-detector" {
   project_name = var.app_name
   name         = "warikan-detector"
   input_bucket = aws_s3_bucket.test_bucket
-  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-warikan-detector:8c1df2b357327773838cea1f57298b18"
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-warikan-detector:5c9ef6422080b36d89dc51ebd134533d"
 }
