@@ -17,7 +17,9 @@ def process_folder_for_inference(input_folder_path, output_folder_path, **kwargs
 
 
 def process_csv_file_for_inference(input_file_path, output_file_path, **kwargs) -> None:
-    with open(input_file_path, 'rb') as input, open(output_file_path, 'wb') as output:
+    # extract 'encoding' from kwargs
+    encoding = kwargs.get('encoding', 'cp932')
+    with open(input_file_path, 'r', encoding=encoding) as input, open(output_file_path, 'w', encoding=encoding) as output:
         process_stream_for_inference(input, output, **kwargs)
 
 
@@ -28,8 +30,7 @@ def process_stream_for_inference(input_stream: WarikanStream, output_stream: War
     encoder_save_path = kwargs.get('encoder_save_path', 'models/label_encoders.pkl')
     label_encoder = load(encoder_save_path)
     # Load data
-    encoding = kwargs.get('encoding', 'cp932')
-    data = pd.read_csv(input_stream, engine='python', encoding=encoding)
+    data = pd.read_csv(input_stream)
     # Preprocess data
     preprocessed_data = preprocess_data_handle_unseen(data, label_encoder)
     # Predict
@@ -37,7 +38,7 @@ def process_stream_for_inference(input_stream: WarikanStream, output_stream: War
     # Add predictions to original data
     data['予測_割り勘対象'] = predictions
     # Return the predicted data
-    data.to_csv(output_stream, index=False, encoding=encoding)
+    data.to_csv(output_stream, index=False)
 
 
 def load_model(model_save_path):
