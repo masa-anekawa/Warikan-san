@@ -7,8 +7,9 @@ resource "aws_lambda_function" "lambda_function" {
   function_name = "${var.project_name}-${var.name}"
   role          = aws_iam_role.lambda_exec.arn
   package_type  = "Image"
-  image_uri = var.image_uri
-  timeout       = 60  # 必要に応じてタイムアウトを調整
+  image_uri     = var.image_uri
+  memory_size   = 1024
+  timeout       = 180  # 必要に応じてタイムアウトを調整
 
   environment {
     variables = {
@@ -64,4 +65,10 @@ resource "aws_iam_policy" "lambda_logging" {
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
   role       = aws_iam_role.lambda_exec.name
   policy_arn = aws_iam_policy.lambda_logging.arn
+}
+
+resource "aws_lambda_function_event_invoke_config" "invoke_config" {
+  function_name                = aws_lambda_function.lambda_function.function_name
+  maximum_event_age_in_seconds = 3600
+  maximum_retry_attempts       = 1
 }
