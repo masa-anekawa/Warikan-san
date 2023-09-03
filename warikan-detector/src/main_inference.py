@@ -12,6 +12,7 @@ from src.training import WarikanClassifier
 from src.warikan_stream import WarikanStream
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def process_folder_for_inference(input_folder_path, output_folder_path, **kwargs) -> None:

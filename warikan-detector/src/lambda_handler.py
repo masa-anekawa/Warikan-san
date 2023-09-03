@@ -6,9 +6,8 @@ from io import BytesIO, TextIOWrapper
 
 from src.main_inference import process_stream_for_inference
 
-# ロギングの設定
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logger.setLevel(logging.INFO)
 
 
 s3 = boto3.client('s3')

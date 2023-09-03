@@ -5,6 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def preprocess_data_add_unknown(data) -> tuple[pd.DataFrame, dict[str, LabelEncoder]]:
