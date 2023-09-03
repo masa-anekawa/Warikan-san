@@ -1,8 +1,19 @@
-from sklearn.ensemble import RandomForestClassifier
+from abc import ABC, abstractmethod
 from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier
 from joblib import dump
+import numpy as np
 
-def train_and_save_model(X_train, y_train, label_encoders, model_path="random_forest_model.pkl", encoder_path="label_encoders.pkl"):
+class WarikanClassifier(ABC):
+    @abstractmethod
+    def predict(self, X) -> np.ndarray:
+        pass
+
+
+WarikanClassifier.register(XGBClassifier)
+WarikanClassifier.register(RandomForestClassifier)
+
+def train_and_save_model(X_train, y_train, label_encoders, model_path="random_forest_model.pkl", encoder_path="label_encoders.pkl") -> WarikanClassifier:
     # clf = RandomForestClassifier(n_estimators=10000, class_weight='balanced', random_state=42)
 
     # Initialize the XGBoost classifier
