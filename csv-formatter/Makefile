@@ -11,7 +11,7 @@ TAG := $(shell md5 -q ./lambda_function.py)
 REPO_URL := $(shell aws ecr describe-repositories --repository-names $(REPO_NAME) --profile $(AWS_PROFILE) --region $(AWS_REGION) --query 'repositories[0].repositoryUri' --output text)
 
 # Dockerイメージをビルド
-build:
+build: test
 	docker build -t $(IMAGE_NAME):$(TAG) .
 
 runlocal:
