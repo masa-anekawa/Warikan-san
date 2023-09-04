@@ -36,4 +36,7 @@ clean:
 	docker rmi -f $(IMAGE_NAME):latest
 	docker rmi -f $(REPO_URL):latest
 
-.PHONY: build runlocal login push clean
+test:
+	pipenv run python -m pytest
+
+.PHONY: build runlocal login push clean test

@@ -1,15 +1,16 @@
+import os
 import boto3
 import pandas as pd
 import logging
 
-from io import StringIO
+from io import BytesIO
 
 # ロギングの設定
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def lambda_handler(event, context):
+def lambda_handler(event):
     # Initialize S3 client
     s3 = boto3.client('s3')
 
@@ -19,9 +20,12 @@ def lambda_handler(event, context):
 
     input_df = load_df_from_s3(s3, bucket_name, input_file_key)
     output_df = transform_df(input_df)
-    
-    output_bucket_name = bucket_name.replace('input', 'output')
-    output_file_key = input_file_key.replace('input', 'output')
+
+    # set output bucket from env
+    output_bucket_name = os.environ.get('OUTPUT_BUCKET', 'warikan-san-csv-formatter-outputs')
+    # set output file key by adding '_formatted' to the input file key
+    output_file_key = _format_output_file_key(input_file_key)
+
     save_df_to_s3(s3, output_df, output_bucket_name, output_file_key)
 
     response = {
@@ -52,7 +56,7 @@ def transform_df(input_df):
 
 def save_df_to_s3(s3, df, bucket_name, output_file_key):
     logger.info(f'exporting file to {output_file_key}')
-    csv_buffer = StringIO()
+    csv_buffer = BytesIO()
     df.to_csv(csv_buffer, index=False, encoding='utf-8')
     s3.put_object(Bucket=bucket_name, Key=output_file_key, Body=csv_buffer.getvalue())
 
@@ -61,9 +65,9 @@ def lambda_handler_local(event, context):
     input_file_key = './input_format.csv'
     output_file_key = './output/output_format.csv'
     # input_df = load_df_from_s3(s3, bucket_name, input_file_key)
-    input_df = load_df_from_file(input_file_key)
+    input_df = _load_df_from_file(input_file_key)
     output_df = transform_df(input_df)
-    save_df_to_file(output_df, output_file_key)
+    _save_df_to_file(output_df, output_file_key)
 
     response = {
         'statusCode': 200,
@@ -73,9 +77,24 @@ def lambda_handler_local(event, context):
     return response
 
 
-def load_df_from_file(file_path):
+def _load_df_from_file(file_path):
     df = pd.read_csv(file_path, encoding='utf-8')
     return df
 
-def save_df_to_file(df, output_file_path):
+
+def _save_df_to_file(df, output_file_path):
     df.to_csv(output_file_path, index=False, encoding='utf-8')
+
+
+def _format_output_file_key(file_path):
+    # Split the filepath into directory, base (filename without extension) and extension
+    dir_name, file_name = os.path.split(file_path)
+    base_name, ext = os.path.splitext(file_name)
+
+    # Append '_formatted' to the base name
+    formatted_name = base_name + '_formatted' + ext
+
+    # Combine the directory and the new file name to get the full path
+    formatted_path = os.path.join(dir_name, formatted_name)
+
+    return formatted_path
