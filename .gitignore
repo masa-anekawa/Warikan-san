@@ -64,5 +64,10 @@ Dockerfile.*.orig
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Personal Data
 *.csv
 *.zip
+
+# Python Virtual Environments
+.venv
