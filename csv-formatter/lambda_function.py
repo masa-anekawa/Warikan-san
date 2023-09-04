@@ -10,7 +10,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def lambda_handler(event):
+def lambda_handler(event, context):
     # Initialize S3 client
     s3 = boto3.client('s3')
 

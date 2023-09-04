@@ -59,7 +59,7 @@ def test_lambda_handler_handles_input_and_output_with_s3(mock_client):
     lambda_function.transform_df = mock_transform_df
 
     # Call lambda_handler function
-    lambda_function.lambda_handler(EVENT)
+    lambda_function.lambda_handler(EVENT, None)
 
     # Assert that S3 client was called with correct arguments
     mock_s3.get_object.assert_called_once_with(Bucket='test-bucket', Key='test-key')

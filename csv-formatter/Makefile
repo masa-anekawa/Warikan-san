@@ -13,7 +13,6 @@ REPO_URL := $(shell aws ecr describe-repositories --repository-names $(REPO_NAME
 # Dockerイメージをビルド
 build:
 	docker build -t $(IMAGE_NAME):$(TAG) .
-	docker build -t $(IMAGE_NAME):latest .
 
 runlocal:
 	docker run -itp 8080:8080 --rm -v ${PWD}:/var/task  warikan-san-csv-formatter:latest "lambda_function.lambda_handler_local"
@@ -25,16 +24,12 @@ login:
 # DockerイメージをECRへプッシュ
 push: build login
 	docker tag $(IMAGE_NAME):$(TAG) $(REPO_URL):$(TAG)
-	docker tag $(IMAGE_NAME):$(TAG) $(REPO_URL):latest
 	docker push $(REPO_URL):$(TAG)
-	docker push $(REPO_URL):latest
 
 # ローカルのDockerイメージを削除
 clean:
 	docker rmi -f $(IMAGE_NAME):$(TAG)
 	docker rmi -f $(REPO_URL):$(TAG)
-	docker rmi -f $(IMAGE_NAME):latest
-	docker rmi -f $(REPO_URL):latest
 
 test:
 	pipenv run python -m pytest
