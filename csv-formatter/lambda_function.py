@@ -53,7 +53,7 @@ def load_df_from_s3(s3, bucket_name, file_key, encoding='utf-8'):
 
 def transform_df(input_df):
     logger.info('transforming dataframe:')
-    logger.info(input_df.head())
+    # logger.info(input_df.head())
     output_df = pd.DataFrame()
     filtered_df = input_df[input_df['割り勘対象'] == 1]
     output_df['金額'] = -filtered_df['金額（円）']
