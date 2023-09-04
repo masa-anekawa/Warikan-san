@@ -10,7 +10,7 @@ module "csv_formatter" {
   project_name = var.app_name
   name         = "csv-formatter"
   input_bucket = aws_s3_bucket.initial_bucket
-  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-csv-formatter:cfbfca3a6663af7d0d8363cafb6b7f2a"
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-csv-formatter:b21fae2239eecd354bde4d57b74d6a6f"
 }
 
 module "warikan-detector" {
@@ -20,5 +20,5 @@ module "warikan-detector" {
   project_name = var.app_name
   name         = "warikan-detector"
   input_bucket = aws_s3_bucket.test_bucket
-  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-warikan-detector:5c9ef6422080b36d89dc51ebd134533d"
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-warikan-detector:81849ac2e22a579b4add46a6001cb31b"
 }
