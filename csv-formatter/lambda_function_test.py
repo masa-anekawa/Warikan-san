@@ -22,7 +22,7 @@ EVENT = {
         }
     ]
 }
-ENCODING = 'utf-8'
+ENCODING = 'cp932'
 INPUT_BYTES = 'input content\n'.encode(ENCODING)
 OUTPUT_BYTES = 'output content\n'.encode(ENCODING)
 
@@ -40,12 +40,8 @@ def test_transform():
     assert transformed_df.dtypes.equals(output_df.dtypes)
 
 
-@patch.object(lambda_function.boto3, 'client')
-def test_lambda_handler_handles_input_and_output_with_s3(mock_client):
-    # Set up mock S3 client
-    mock_s3 = MagicMock()
-    mock_client.return_value = mock_s3
-
+@patch.object(lambda_function, 's3')
+def test_lambda_handler_handles_input_and_output_with_s3(mock_s3):
     # Set up mock S3 response
     body_content = BytesIO(INPUT_BYTES)
     mock_response = {

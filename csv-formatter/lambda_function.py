@@ -9,16 +9,17 @@ from io import BytesIO
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+ENCODING = 'cp932'
+
+s3 = boto3.client('s3')
+
 
 def lambda_handler(event, context):
-    # Initialize S3 client
-    s3 = boto3.client('s3')
-
     # Set the bucket and object key from the Lambda event (assuming the Lambda is triggered by S3)
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     input_file_key = event['Records'][0]['s3']['object']['key']
 
-    input_df = load_df_from_s3(s3, bucket_name, input_file_key)
+    input_df = load_df_from_s3(s3, bucket_name, input_file_key, encoding=ENCODING)
     output_df = transform_df(input_df)
 
     # set output bucket from env
@@ -26,7 +27,7 @@ def lambda_handler(event, context):
     # set output file key by adding '_formatted' to the input file key
     output_file_key = _format_output_file_key(input_file_key)
 
-    save_df_to_s3(s3, output_df, output_bucket_name, output_file_key)
+    save_df_to_s3(s3, output_df, output_bucket_name, output_file_key, encoding=ENCODING)
 
     response = {
         'statusCode': 200,
@@ -35,10 +36,10 @@ def lambda_handler(event, context):
     return response
 
 
-def load_df_from_s3(s3, bucket_name, file_key):
+def load_df_from_s3(s3, bucket_name, file_key, encoding='utf-8'):
     logger.info(f'loading file from {file_key}')
     response = s3.get_object(Bucket=bucket_name, Key=file_key)
-    df = pd.read_csv(response['Body'], encoding='utf-8')
+    df = pd.read_csv(response['Body'], encoding=encoding)
     return df
 
 
@@ -54,10 +55,10 @@ def transform_df(input_df):
     return output_df
 
 
-def save_df_to_s3(s3, df, bucket_name, output_file_key):
+def save_df_to_s3(s3, df, bucket_name, output_file_key, encoding='utf-8'):
     logger.info(f'exporting file to {output_file_key}')
     csv_buffer = BytesIO()
-    df.to_csv(csv_buffer, index=False, encoding='utf-8')
+    df.to_csv(csv_buffer, index=False, encoding=encoding)
     s3.put_object(Bucket=bucket_name, Key=output_file_key, Body=csv_buffer.getvalue())
 
 
