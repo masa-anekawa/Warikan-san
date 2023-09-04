@@ -10,7 +10,7 @@ module "csv_formatter" {
   project_name = var.app_name
   name         = "csv-formatter"
   input_bucket = aws_s3_bucket.initial_bucket
-  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-csv-formatter:b21fae2239eecd354bde4d57b74d6a6f"
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-csv-formatter:6040c7d72d28553000819fcf28f6dcca"
 }
 
 module "warikan-detector" {
