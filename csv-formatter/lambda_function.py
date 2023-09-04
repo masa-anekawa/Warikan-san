@@ -39,7 +39,14 @@ def lambda_handler(event, context):
 def load_df_from_s3(s3, bucket_name, file_key, encoding='utf-8'):
     logger.info(f'loading file from {file_key}')
     response = s3.get_object(Bucket=bucket_name, Key=file_key)
-    body_bytes = BytesIO(response['Body'].getvalue()) # required to re-mapping to notice Pandas that the file is binary
+
+    # response['Body'] may be either bytes or string. so transform it to bytes and decode it
+    body = response['Body'].read()
+    if isinstance(body, bytes):
+        body_bytes = BytesIO(body)
+    else: # isinstance(body, str):
+        body_bytes = BytesIO(body.encode(encoding))
+
     df = pd.read_csv(body_bytes, encoding=encoding)
     return df
 

@@ -1,9 +1,6 @@
 import pandas as pd
-import json
-import boto3
-from io import StringIO, BytesIO, TextIOWrapper
-import unittest
-from unittest.mock import MagicMock, patch, ANY, call
+from io import BytesIO
+from unittest.mock import patch, ANY, call
 
 import lambda_function
 
