@@ -56,7 +56,7 @@ def transform_df(input_df):
     # logger.info(input_df.head())
     output_df = pd.DataFrame()
     filtered_df = input_df[input_df['割り勘対象'] == 1]
-    output_df['金額'] = -filtered_df['金額（円）']
+    output_df['金額'] = -filtered_df['金額（円）'].astype(int)  # Rule 1
     output_df['日付'] = filtered_df['日付']  # Rule 2
     output_df['支払い者'] = 'まさ'  # Rule 3
     output_df['品目'] = filtered_df['内容']  # Rule 4
