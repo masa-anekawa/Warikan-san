@@ -2,6 +2,15 @@ provider "aws" {
   region = var.region
 }
 
+module "encoding_adjuster" {
+  source       = "./modules/object-transformer"
+  region       = var.region
+  account_id   = var.account_id
+  project_name = var.app_name
+  name         = "encoding-adjuster"
+  input_bucket = aws_s3_bucket.test_bucket
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-encoding-adjuster:6cf6bbf655f43ce4e5092df4d692248f"
+}
 
 module "warikan-detector" {
   source       = "./modules/object-transformer"
@@ -10,7 +19,7 @@ module "warikan-detector" {
   project_name = var.app_name
   name         = "warikan-detector"
   input_bucket = aws_s3_bucket.test_bucket
-  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-warikan-detector:81849ac2e22a579b4add46a6001cb31b"
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-warikan-detector:4eb20e9d3caf2874a4a12d5b78a467cb"
 }
 
 module "csv_formatter" {
@@ -20,7 +29,7 @@ module "csv_formatter" {
   project_name = var.app_name
   name         = "csv-formatter"
   input_bucket = aws_s3_bucket.initial_bucket
-  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-csv-formatter:6040c7d72d28553000819fcf28f6dcca"
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-csv-formatter:c6fe22b9545140fb17cec29e906f7473"
 }
 
 module "gspread-writer" {
@@ -30,5 +39,5 @@ module "gspread-writer" {
   project_name = var.app_name
   name         = "gspread-writer"
   input_bucket = module.csv_formatter.output_bucket
-  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-gspread-writer:e7dff997ead284a625fc6cdb19649530"
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-gspread-writer:ad50b20f004137e739591f29741e6eeb"
 }

@@ -11,8 +11,6 @@ from io import BytesIO
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-ENCODING = 'cp932'
-
 s3 = boto3.client('s3')
 
 # カラム名とデフォルト値のマッピング
@@ -31,7 +29,7 @@ def lambda_handler(event, context):
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key']
 
-    input_df = load_df_from_s3(s3, bucket, key, encoding=ENCODING)
+    input_df = load_df_from_s3(s3, bucket, key)
     append_df_to_gspread(input_df)
 
     response = {
@@ -41,7 +39,7 @@ def lambda_handler(event, context):
     return response
 
 
-def load_df_from_s3(s3, bucket_name, file_key, encoding='utf-8'):
+def load_df_from_s3(s3, bucket_name, file_key):
     logger.info(f'loading file from {file_key}')
     response = s3.get_object(Bucket=bucket_name, Key=file_key)
 
@@ -50,9 +48,9 @@ def load_df_from_s3(s3, bucket_name, file_key, encoding='utf-8'):
     if isinstance(body, bytes):
         body_bytes = BytesIO(body)
     else: # isinstance(body, str):
-        body_bytes = BytesIO(body.encode(encoding))
+        body_bytes = BytesIO(body.encode())
 
-    df = pd.read_csv(body_bytes, encoding=encoding)
+    df = pd.read_csv(body_bytes)
     return df
 
 

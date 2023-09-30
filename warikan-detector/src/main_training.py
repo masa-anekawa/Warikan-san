@@ -9,7 +9,7 @@ def train_on_all_files_in_folder(input_folder_path, model_save_path="models/rand
     csv_files = [f for f in os.listdir(input_folder_path) if f.endswith('.csv')]
 
     # Load and concatenate all CSV files
-    data_frames = [pd.read_csv(os.path.join(input_folder_path, csv_file), encoding='shift-jis') for csv_file in csv_files]
+    data_frames = [pd.read_csv(os.path.join(input_folder_path, csv_file)) for csv_file in csv_files]
     combined_data = pd.concat(data_frames, ignore_index=True)
 
     # Preprocess data

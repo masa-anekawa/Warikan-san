@@ -9,8 +9,6 @@ from io import BytesIO
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-ENCODING = 'cp932'
-
 s3 = boto3.client('s3')
 
 
@@ -19,7 +17,7 @@ def lambda_handler(event, context):
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     input_file_key = event['Records'][0]['s3']['object']['key']
 
-    input_df = load_df_from_s3(s3, bucket_name, input_file_key, encoding=ENCODING)
+    input_df = load_df_from_s3(s3, bucket_name, input_file_key)
     output_df = transform_df(input_df)
 
     # set output bucket from env
@@ -27,7 +25,7 @@ def lambda_handler(event, context):
     # set output file key by adding '_formatted' to the input file key
     output_file_key = _format_output_file_key(input_file_key)
 
-    save_df_to_s3(s3, output_df, output_bucket_name, output_file_key, encoding=ENCODING)
+    save_df_to_s3(s3, output_df, output_bucket_name, output_file_key)
 
     response = {
         'statusCode': 200,
@@ -36,7 +34,7 @@ def lambda_handler(event, context):
     return response
 
 
-def load_df_from_s3(s3, bucket_name, file_key, encoding='utf-8'):
+def load_df_from_s3(s3, bucket_name, file_key):
     logger.info(f'loading file from {file_key}')
     response = s3.get_object(Bucket=bucket_name, Key=file_key)
 
@@ -45,9 +43,9 @@ def load_df_from_s3(s3, bucket_name, file_key, encoding='utf-8'):
     if isinstance(body, bytes):
         body_bytes = BytesIO(body)
     else: # isinstance(body, str):
-        body_bytes = BytesIO(body.encode(encoding))
+        body_bytes = BytesIO(body.encode())
 
-    df = pd.read_csv(body_bytes, encoding=encoding)
+    df = pd.read_csv(body_bytes)
     return df
 
 
@@ -63,10 +61,10 @@ def transform_df(input_df):
     return output_df
 
 
-def save_df_to_s3(s3, df, bucket_name, output_file_key, encoding='utf-8'):
+def save_df_to_s3(s3, df, bucket_name, output_file_key):
     logger.info(f'exporting file to {output_file_key}')
     csv_buffer = BytesIO()
-    df.to_csv(csv_buffer, index=False, encoding=encoding)
+    df.to_csv(csv_buffer, index=False)
     s3.put_object(Bucket=bucket_name, Key=output_file_key, Body=csv_buffer.getvalue())
 
 
@@ -87,12 +85,12 @@ def lambda_handler_local(event, context):
 
 
 def _load_df_from_file(file_path):
-    df = pd.read_csv(file_path, encoding='utf-8')
+    df = pd.read_csv(file_path)
     return df
 
 
 def _save_df_to_file(df, output_file_path):
-    df.to_csv(output_file_path, index=False, encoding='utf-8')
+    df.to_csv(output_file_path, index=False)
 
 
 def _format_output_file_key(file_path):

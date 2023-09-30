@@ -21,9 +21,8 @@ class TestLambdaFunction(unittest.TestCase):
             }
         ]
     }
-    ENCODING = 'cp932'
-    INPUT_BYTES = 'input content\n'.encode(ENCODING)
-    OUTPUT_BYTES = 'output content\n'.encode(ENCODING)
+    INPUT_BYTES = 'input content\n'.encode()
+    OUTPUT_BYTES = 'output content\n'.encode()
     EXISTING_GSPREAD_RECORDS = pd.read_csv('./gspread_format.csv').to_dict()
     INPUT_DF = pd.read_csv('./input_format.csv')
 
@@ -74,7 +73,7 @@ class TestLambdaFunction(unittest.TestCase):
     def _mock_input(self):
         # Prepare bytes that is read from input_format.csv, and call _mock_s3_body with it
         input_bytes = BytesIO()
-        self.INPUT_DF.to_csv(input_bytes, index=False, encoding=self.ENCODING)
+        self.INPUT_DF.to_csv(input_bytes, index=False)
         self._mock_s3_body(input_bytes.getvalue())
 
     def _mock_gspread_records(self):

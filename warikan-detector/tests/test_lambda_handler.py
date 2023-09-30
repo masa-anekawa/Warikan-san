@@ -21,9 +21,8 @@ EVENT = {
         }
     ]
 }
-ENCODING = 'cp932'
-INPUT_BYTES = 'input content'.encode(ENCODING)
-OUTPUT_BYTES = 'output content'.encode(ENCODING)
+INPUT_BYTES = 'input content'.encode()
+OUTPUT_BYTES = 'output content'.encode()
 
 @patch('src.lambda_handler.BytesIO')
 @patch('src.lambda_handler.TextIOWrapper')
@@ -38,10 +37,10 @@ def test_lambda_handler(mock_s3, mock_process_stream_for_inference, mock_text_io
     mock_s3.get_object.return_value = mock_response
 
     # Ser up mock input and output stream
-    input_stream = TextIOWrapper(body_content, encoding=ENCODING)
+    input_stream = TextIOWrapper(body_content)
     output_buffer = BytesIO()
     mock_bytes_io.return_value = output_buffer
-    output_stream = TextIOWrapper(output_buffer, encoding=ENCODING)
+    output_stream = TextIOWrapper(output_buffer)
     mock_text_io_wrapper.side_effect = [input_stream, output_stream]
 
     # Set up mock process_stream_for_inference side effect that writes to output stream
@@ -61,8 +60,8 @@ def test_lambda_handler(mock_s3, mock_process_stream_for_inference, mock_text_io
 
     # Assert that the mock text io wrapper was called with correct arguments
     mock_text_io_wrapper.assert_has_calls([
-        call(body_content, encoding=ENCODING),
-        call(output_buffer, encoding=ENCODING)
+        call(body_content),
+        call(output_buffer)
     ])
 
     # Assert that process_stream_for_inference was called with correct arguments

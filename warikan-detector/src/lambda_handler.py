@@ -18,14 +18,12 @@ def lambda_handler(event, context):
     logger.info(f'event: {event}')
     logger.info(f'context: {context}')
 
-    # extract 'encoding' from env
-    encoding = os.environ.get('ENCODING', 'cp932')
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key']
     response = s3.get_object(Bucket=bucket, Key=key)
-    input_stream = TextIOWrapper(response['Body'], encoding=encoding)
+    input_stream = TextIOWrapper(response['Body'])
     output_buffer = BytesIO()
-    output_stream = TextIOWrapper(output_buffer, encoding=encoding)
+    output_stream = TextIOWrapper(output_buffer)
 
     process_stream_for_inference(input_stream, output_stream, model_save_path='models/xgboost_model.pkl')
 

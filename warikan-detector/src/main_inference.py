@@ -26,9 +26,7 @@ def process_folder_for_inference(input_folder_path, output_folder_path, **kwargs
 
 
 def process_csv_file_for_inference(input_file_path, output_file_path, **kwargs) -> None:
-    # extract 'encoding' from kwargs
-    encoding = kwargs.get('encoding', 'cp932')
-    with open(input_file_path, 'r', encoding=encoding) as input, open(output_file_path, 'w', encoding=encoding) as output:
+    with open(input_file_path, 'r') as input, open(output_file_path, 'w') as output:
         process_stream_for_inference(input, output, **kwargs)
 
 

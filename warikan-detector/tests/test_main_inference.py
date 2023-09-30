@@ -28,8 +28,8 @@ class TestProcessFolderForInference(unittest.TestCase):
         })
         self.test_file_path = os.path.join(self.input_dir, 'test.csv')
         self.test_file_path_2 = os.path.join(self.input_dir, 'test_2.csv')
-        self.test_data.to_csv(self.test_file_path, index=False, encoding='utf-8')
-        self.test_data.to_csv(self.test_file_path_2, index=False, encoding='utf-8')
+        self.test_data.to_csv(self.test_file_path, index=False)
+        self.test_data.to_csv(self.test_file_path_2, index=False)
         self.test_output_file_path = os.path.join(self.output_dir, 'predicted_test.csv')
         self.test_output_file_path_2 = os.path.join(self.output_dir, 'predicted_test_2.csv')
 
@@ -64,10 +64,10 @@ class TestProcessFolderForInference(unittest.TestCase):
         input_stream = open(self.test_file_path)
         output_stream = open(self.test_output_file_path, 'a+')
         # Call the function with the test input and output directories
-        main_inference.process_stream_for_inference(input_stream, output_stream, encoding='utf-8')
+        main_inference.process_stream_for_inference(input_stream, output_stream)
         # Check that the output file was created and has the correct content
         output_stream.seek(0)
-        output_data = pd.read_csv(output_stream, encoding='utf-8')
+        output_data = pd.read_csv(output_stream)
         self.assertEqual(output_data.shape, (3, 11))
         self.assertListEqual(list(output_data.columns), ['計算対象','日付','内容','金額（円）','保有金融機関','大項目','中項目','メモ','振替','ID','予測_割り勘対象'])
         self.assertListEqual(list(output_data['予測_割り勘対象']), [0, 0, 0])

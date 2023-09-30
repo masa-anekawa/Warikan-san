@@ -19,9 +19,8 @@ EVENT = {
         }
     ]
 }
-ENCODING = 'cp932'
-INPUT_BYTES = 'input content\n'.encode(ENCODING)
-OUTPUT_BYTES = 'output content\n'.encode(ENCODING)
+INPUT_BYTES = 'input content\n'.encode()
+OUTPUT_BYTES = 'output content\n'.encode()
 
 
 def test_transform():
