@@ -32,7 +32,6 @@ def lambda_handler(event, context):
     key = event['Records'][0]['s3']['object']['key']
 
     input_df = load_df_from_s3(s3, bucket, key, encoding=ENCODING)
-    import pprint; pprint.pprint(input_df)
     append_df_to_gspread(input_df)
 
     response = {
@@ -58,15 +57,20 @@ def load_df_from_s3(s3, bucket_name, file_key, encoding='utf-8'):
 
 
 def append_df_to_gspread(input_df: pd.DataFrame) -> None:
+    logger.info('appending dataframe to gspread...')
+
     # Google Spreadsheetに接続
     gc = gspread.service_account()
     sheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1j-7OXWMZ_GYTZ6UR1LUo5ro4px5ArHSRw7YYiZ4RHMY/edit#gid=458319299").worksheet("マスタ")
+    logger.info(f'connected to {sheet}')
     existing_data = sheet.get_all_records()
     existing_df = pd.DataFrame(existing_data)
+    logger.info(f'existing_df: {existing_df.info}')
 
     output_df = _calc_output_df(input_df, existing_df)
 
     # find the range to be updated
+    logger.info('finding the range to be updated...')
     first_update_row = existing_df.index[-1] + 2
     first_col = existing_df.columns.get_loc('ID')
     last_update_row = first_update_row + len(output_df) - 1
@@ -75,6 +79,7 @@ def append_df_to_gspread(input_df: pd.DataFrame) -> None:
     update_range_str = f'{_convert_index_to_alphabet(first_col)}{first_update_row}:{_convert_index_to_alphabet(last_col)}{last_update_row}'
 
     # call batch_update
+    logger.info(f'updating range {update_range_str}...')
     sheet.batch_update([
         {
             'range': update_range_str,
@@ -84,6 +89,8 @@ def append_df_to_gspread(input_df: pd.DataFrame) -> None:
 
 
 def _calc_output_df(input_df: pd.DataFrame, existing_df: pd.DataFrame) -> pd.DataFrame:
+    logger.info('transforming dataframe to output...')
+
     output_df = input_df.copy()
     pprint.pprint(output_df)
 
