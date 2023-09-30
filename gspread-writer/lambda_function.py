@@ -8,7 +8,7 @@ import logging
 from io import BytesIO
 
 # ロギングの設定
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 ENCODING = 'cp932'
@@ -17,12 +17,12 @@ s3 = boto3.client('s3')
 
 # カラム名とデフォルト値のマッピング
 COLUMN_DEFAULT_VALUE = {
-    'マサミク': 'FALSE',
-    '清算': 'FALSE',
+    'マサミク': False,
+    '清算': False,
     'まさ比率': 2,
     'まな比率': 1,
-    '清算済み': 'FALSE',
-    '重複？': 'FALSE'
+    '清算済み': False,
+    '重複？': False
 }
 
 
