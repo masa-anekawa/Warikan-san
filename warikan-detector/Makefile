@@ -31,4 +31,7 @@ clean:
 	docker rmi -f $(IMAGE_NAME):$(TAG)
 	docker rmi -f $(REPO_URL):$(TAG)
 
-.PHONY: build runlocal login push clean
+test:
+	pipenv run python -m pytest
+
+.PHONY: build runlocal login push clean test
