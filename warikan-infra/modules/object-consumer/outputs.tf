@@ -1,8 +1,3 @@
-output "output_bucket" {
-  description = "The S3 bucket where transformed objects are placed."
-  value       = aws_s3_bucket.output_bucket
-}
-
 output "lambda_function_arn" {
   description = "The ARN of the Lambda function."
   value       = aws_lambda_function.lambda_function.arn
