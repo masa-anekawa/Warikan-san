@@ -1,10 +1,18 @@
+# ---- Build Stage ----
+FROM public.ecr.aws/lambda/python:3.11 as builder
 
-FROM public.ecr.aws/lambda/python:3.11
+# Set the working directory
+WORKDIR /var/task
 
-# Install pandas
-RUN pip install pandas
+# Copy the Pipfile and Pipfile.lock to the container
+COPY Pipfile Pipfile.lock /var/task/
 
-# Copy the lambda function
-COPY lambda_function.py /var/task/
+# Install pipenv, generate requirements.txt, and install dependencies
+RUN pip install pipenv && \
+  pipenv install --system
 
-CMD ["lambda_function.lambda_handler"]
+# Copy the lambda handler code and the model files
+COPY ./lambda_function.py /var/task/
+
+# Set the CMD to your handler
+CMD [ "lambda_function.lambda_handler" ]

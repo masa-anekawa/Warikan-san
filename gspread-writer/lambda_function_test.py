@@ -58,8 +58,8 @@ class TestLambdaFunction(unittest.TestCase):
             {
                 'range': 'A2:M3',
                 'values': [
-                    [656,1490,'2023/8/26','まさ','ガジェット','FALSE','FALSE',2,1,993,497,'FALSE','FALSE'],
-                    [657,489,'2023/8/25','まさ','ドラッグストア','FALSE','FALSE',2,1,326,163,'FALSE','FALSE']
+                    [656,1490,'2023/8/26','まさ','テストガジェット',False,False,2,1,993,497,False,False],
+                    [657,489,'2023/8/25','まさ','テストドラッグストア',False,False,2,1,326,163,False,False]
                 ]
             }
         ])
