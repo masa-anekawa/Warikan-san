@@ -12,9 +12,12 @@ resource "aws_lambda_function" "lambda_function" {
   timeout       = 180  # 必要に応じてタイムアウトを調整
 
   environment {
-    variables = {
-      OUTPUT_BUCKET = aws_s3_bucket.output_bucket.bucket
-    }
+    variables = merge(
+      {
+        OUTPUT_BUCKET = aws_s3_bucket.output_bucket.bucket
+      },
+      var.custom_environment_variables
+    )
   }
 }
 

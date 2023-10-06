@@ -34,3 +34,9 @@ variable "image_uri" {
   description = "The URI of the container image used by the Lambda function."
   type        = string
 }
+
+variable "custom_environment_variables" {
+  description = "Custom environment variables for the Lambda function to override or merge with defaults"
+  type        = map(string)
+  default     = {}
+}
