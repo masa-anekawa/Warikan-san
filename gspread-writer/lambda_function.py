@@ -7,6 +7,8 @@ import logging
 
 from io import BytesIO
 
+from secrets_helper import get_secret_dict
+
 # ロギングの設定
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -58,7 +60,7 @@ def append_df_to_gspread(input_df: pd.DataFrame) -> None:
     logger.info('appending dataframe to gspread...')
 
     # Google Spreadsheetに接続
-    gc = gspread.service_account()
+    gc = _get_service_account()
     sheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1j-7OXWMZ_GYTZ6UR1LUo5ro4px5ArHSRw7YYiZ4RHMY/edit#gid=458319299").worksheet("マスタ")
     logger.info(f'connected to {sheet}')
     existing_data = sheet.get_all_records()
@@ -85,6 +87,17 @@ def append_df_to_gspread(input_df: pd.DataFrame) -> None:
         }
     ])
 
+
+def _get_service_account():
+    """
+    Returns a gspread service account object either from the secret manager or from the default credentials.
+    """
+    try:
+        credentials = get_secret_dict(os.environ['SECRET_NAME'])
+        service_account = gspread.service_account_from_dict(credentials)
+    except:
+        service_account = gspread.service_account()
+    return service_account
 
 def _calc_output_df(input_df: pd.DataFrame, existing_df: pd.DataFrame) -> pd.DataFrame:
     logger.info('transforming dataframe to output...')
