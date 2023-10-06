@@ -8,7 +8,7 @@ module "encoding_adjuster" {
   account_id   = var.account_id
   project_name = var.app_name
   name         = "encoding-adjuster"
-  input_bucket = aws_s3_bucket.test_bucket
+  input_bucket = aws_s3_bucket.initial_bucket
   image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-encoding-adjuster:6cf6bbf655f43ce4e5092df4d692248f"
 }
 
@@ -18,7 +18,7 @@ module "warikan-detector" {
   account_id   = var.account_id
   project_name = var.app_name
   name         = "warikan-detector"
-  input_bucket = aws_s3_bucket.test_bucket
+  input_bucket = module.encoding_adjuster.output_bucket
   image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-warikan-detector:4eb20e9d3caf2874a4a12d5b78a467cb"
 }
 
@@ -28,7 +28,7 @@ module "csv_formatter" {
   account_id   = var.account_id
   project_name = var.app_name
   name         = "csv-formatter"
-  input_bucket = aws_s3_bucket.initial_bucket
+  input_bucket = aws_s3_bucket.confirmed_bucket
   image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-csv-formatter:c6fe22b9545140fb17cec29e906f7473"
 }
 
