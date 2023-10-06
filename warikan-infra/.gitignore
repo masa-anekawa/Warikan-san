@@ -2,3 +2,5 @@
 terraform.tfstate*
 !.terraform-version
 .env*
+
+secrets.json
