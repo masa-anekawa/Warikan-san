@@ -12,7 +12,7 @@ RUN pip install pipenv && \
   pipenv install --system
 
 # Copy the lambda handler code and the model files
-COPY ./lambda_function.py /var/task/
+COPY ./src /var/task/src
 
 # Set the CMD to your handler
-CMD [ "lambda_function.lambda_handler" ]
+CMD [ "src.lambda_function.lambda_handler" ]

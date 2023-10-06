@@ -5,7 +5,7 @@ AWS_PROFILE := default
 AWS_REGION := ap-northeast-1
 REPO_NAME := warikan-san-gspread-writer
 IMAGE_NAME := warikan-san-gspread-writer
-TAG := $(shell md5 -q ./lambda_function.py)
+TAG := $(shell git ls-files . | xargs cat | md5)
 
 # ECR リポジトリのURLを取得
 REPO_URL := $(shell aws ecr describe-repositories --repository-names $(REPO_NAME) --profile $(AWS_PROFILE) --region $(AWS_REGION) --query 'repositories[0].repositoryUri' --output text)

@@ -7,7 +7,7 @@ import logging
 
 from io import BytesIO
 
-from secrets_helper import get_secret_dict
+from src.secrets_helper import get_secret_dict
 
 # ロギングの設定
 logger = logging.getLogger(__name__)

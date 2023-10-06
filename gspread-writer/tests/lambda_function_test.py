@@ -3,7 +3,7 @@ from io import BytesIO
 from unittest.mock import MagicMock, patch, ANY, call
 import unittest
 
-import lambda_function
+from src import lambda_function
 
 
 class TestLambdaFunction(unittest.TestCase):
