@@ -12,7 +12,7 @@ module "encoding_adjuster" {
   image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-encoding-adjuster:6cf6bbf655f43ce4e5092df4d692248f"
 }
 
-module "warikan-detector" {
+module "warikan_detector" {
   source       = "./modules/object-transformer"
   region       = var.region
   account_id   = var.account_id
@@ -32,7 +32,7 @@ module "csv_formatter" {
   image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-csv-formatter:c6fe22b9545140fb17cec29e906f7473"
 }
 
-module "gspread-writer" {
+module "gspread_writer" {
   source       = "./modules/object-consumer"
   region       = var.region
   account_id   = var.account_id
@@ -42,9 +42,9 @@ module "gspread-writer" {
   image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-gspread-writer:6a15fe82e7357d8e93fb3d5167c45edc"
 }
 
-module "gspread-secrets-permitter" {
+module "gspread_secrets_permitter" {
   source       = "./modules/secrets-permitter"
   project_name = var.app_name
   name         = "gspread-writer"
-  requester_role_name = module.gspread-writer.iam_role_name
+  requester_role_name = module.gspread_writer.iam_role_name
 }
