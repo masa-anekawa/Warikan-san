@@ -39,5 +39,6 @@ module "gspread-writer" {
   project_name = var.app_name
   name         = "gspread-writer"
   input_bucket = module.csv_formatter.output_bucket
-  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-gspread-writer:ad50b20f004137e739591f29741e6eeb"
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-gspread-writer:6a15fe82e7357d8e93fb3d5167c45edc"
+}
 }
