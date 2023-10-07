@@ -93,9 +93,12 @@ def _get_service_account():
     Returns a gspread service account object either from the secret manager or from the default credentials.
     """
     try:
-        credentials = get_secret_dict(os.environ['SECRET_NAME'])
+        logger.info('trying to get service account from secret manager...')
+        credentials = get_secret_dict(os.environ['SECRETS_NAME'])
         service_account = gspread.service_account_from_dict(credentials)
-    except:
+    # Catch any exception and try to get service account from default credentials
+    except Exception as e:
+        logger.warn(f'Failed to get service account from secret manager: {e}. Trying to get from default credentials...')
         service_account = gspread.service_account()
     return service_account
 
