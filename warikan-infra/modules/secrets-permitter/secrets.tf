@@ -5,7 +5,7 @@ data "local_file" "secret_json" {
 
 # Create the secrets in AWS Secrets Manager
 resource "aws_secretsmanager_secret" "this" {
-  name = "${var.project_name}-${var.name}-secrets"
+  name = var.secrets_name
 }
 
 resource "aws_secretsmanager_secret_version" "my_secret_version" {

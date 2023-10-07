@@ -1,10 +1,5 @@
-variable "project_name" {
-  description = "The name of the application."
-  type        = string
-}
-
-variable "name" {
-  description = "The name of the object transformer."
+variable "secrets_name" {
+  description = "The name of the secrets."
   type        = string
 }
 

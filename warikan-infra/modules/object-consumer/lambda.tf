@@ -12,7 +12,7 @@ resource "aws_lambda_function" "lambda_function" {
   timeout       = 180  # 必要に応じてタイムアウトを調整
 
   environment {
-    variables = {}
+    variables = var.custom_environment_variables
   }
 }
 

@@ -2,6 +2,10 @@ provider "aws" {
   region = var.region
 }
 
+locals {
+  secrets_name = "${var.app_name}-gspread-writer-secrets"
+}
+
 module "encoding_adjuster" {
   source       = "./modules/object-transformer"
   region       = var.region
@@ -39,12 +43,14 @@ module "gspread_writer" {
   project_name = var.app_name
   name         = "gspread-writer"
   input_bucket = module.csv_formatter.output_bucket
-  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-gspread-writer:6a15fe82e7357d8e93fb3d5167c45edc"
+  image_uri    = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/warikan-san-gspread-writer:b293bcf26a04a1f3f8c6d9526d94a5c2"
+  custom_environment_variables = {
+    SECRETS_NAME = local.secrets_name
+  }
 }
 
 module "gspread_secrets_permitter" {
-  source       = "./modules/secrets-permitter"
-  project_name = var.app_name
-  name         = "gspread-writer"
+  source              = "./modules/secrets-permitter"
+  secrets_name        = local.secrets_name
   requester_role_name = module.gspread_writer.iam_role_name
 }
