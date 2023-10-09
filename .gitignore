@@ -71,3 +71,6 @@ Thumbs.db
 
 # Python Virtual Environments
 .venv
+
+# Direnv environment variables
+.envrc*
