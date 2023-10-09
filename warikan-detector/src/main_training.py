@@ -1,8 +1,17 @@
 import os
+import logging
 import pandas as pd
 
 from src.preprocessing import preprocess_data_add_unknown
 from src.training import train_and_save_model
+
+
+# set up logging to console
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+logging.getLogger('').addHandler(console)
+logger = logging.getLogger(__name__)
+
 
 def train_on_all_files_in_folder(input_folder_path, model_save_path="models/random_forest_model.pkl", encoder_save_path="models/label_encoders.pkl"):
     # List all CSV files in the folder

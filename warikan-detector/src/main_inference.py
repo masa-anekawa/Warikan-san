@@ -11,8 +11,11 @@ from src.preprocessing import preprocess_data_handle_unseen
 from src.training import WarikanClassifier
 from src.warikan_stream import WarikanStream
 
+# set up logging to console
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+logging.getLogger('').addHandler(console)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 
 def process_folder_for_inference(input_folder_path, output_folder_path, **kwargs) -> None:
