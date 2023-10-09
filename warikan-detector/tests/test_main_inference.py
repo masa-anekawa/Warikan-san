@@ -64,7 +64,7 @@ class TestProcessFolderForInference(unittest.TestCase):
         input_stream = open(self.test_file_path)
         output_stream = open(self.test_output_file_path, 'a+')
         # Call the function with the test input and output directories
-        main_inference.process_stream_for_inference(input_stream, output_stream)
+        main_inference.process_stream_for_inference(input_stream, output_stream, model_save_path='models/xgboost_model.pkl', encoder_save_path='models/label_encoders.pkl')
         # Check that the output file was created and has the correct content
         output_stream.seek(0)
         output_data = pd.read_csv(output_stream)
